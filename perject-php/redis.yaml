@@ -1,0 +1,30 @@
+- hosts: redis
+  tasks:
+    - name: install redis
+      yum:
+        name: redis
+        state: present
+
+    - name: started redis
+      systemd:
+        name: redis
+        state: restarted
+        enabled: yes
+
+    - name: cp redis.conf
+      copy:
+        src: ./redis/redis.conf.j2
+        dest: /etc/redis.conf
+        owner: redis
+        group: root
+        mode: 0640
+        backup: yes
+      notify: restart redis
+
+  handlers:
+    - name: restart redis
+      systemd:
+        name: redis
+        state: restarted
+        enabled: yes
+

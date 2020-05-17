@@ -1,0 +1,16 @@
+server {
+	listen 80;
+	server_name php.osker.com;
+	root /code/phpMyAdmin-5.0.2-all-languages;
+
+	location / {
+		index index.php;
+	}
+
+	location ~ \.php$ {
+		fastcgi_pass 127.0.0.1:9000;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		include fastcgi_params;
+	}
+}
+

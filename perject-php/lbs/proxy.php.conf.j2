@@ -1,0 +1,18 @@
+upstream php {
+	server 172.16.1.7:80;
+	server 172.16.1.8:80;
+}
+
+server {
+	listen 80;
+	server_name php.osker.com;
+
+	location / {
+		proxy_pass http://php;
+		proxy_set_header Host $http_host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	}
+
+}
+

@@ -1,0 +1,19 @@
+- hosts: lbs
+  tasks:
+    - name: install nginx
+      yum:
+        name: nginx
+        state: present
+    - name: cp proxy.php.com.conf
+      copy:
+        src: ./lbs/proxy.php.conf.j2
+        dest: /etc/nginx/conf.d/proxy.php.conf
+        backup: yes
+      notify: restart nginx
+  handlers:
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
+        enabled: yes
+

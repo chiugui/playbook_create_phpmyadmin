@@ -1,0 +1,108 @@
+- hosts: Webservers
+  tasks:
+    - name: isntall nginx php-*
+      yum:
+        name: "{{ packs }}"
+        state: present
+      vars:
+        packs:
+          - nginx
+          - php71w
+          - php71w-cli
+          - php71w-common
+          - php71w-devel
+          - php71w-embedded
+          - php71w-gd
+          - php71w-mcrypt
+          - php71w-mbstring
+          - php71w-pdo
+          - php71w-xml
+          - php71w-fpm
+          - php71w-mysqlnd
+          - php71w-opcache
+          - php71w-pecl-memcached
+          - php71w-pecl-redis
+          - php71w-pecl-mongodb
+
+    - name: groupadd www
+      group:
+        name: www
+        gid: 666
+        state: present
+
+    - name: useradd www
+      user:
+        name: www
+        uid: 666
+        shell: /sbin/nologin
+        create_home: no
+        state: present
+
+    - name: mkdir /code
+      file:
+        path: /code
+        owner: www
+        group: www
+        recurse: yes
+        mode: 0755
+    - name: unarchive phpMyAdmin-5.0.2-all-languages.zip
+      unarchive:
+        src: ./phpMyAdmin-5.0.2-all-languages.zip
+        dest: /code/
+        owner: www
+        group: www
+    - name: cp nginx.conf
+      copy:
+        src: ./webservers/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+        backup: yes
+      notify: restart nginx
+    - name: cp php.com.conf
+      copy:
+        src: ./webservers/php.com.conf.j2
+        dest: /etc/nginx/conf.d/php.com.conf
+        backup: yes
+      notify: restart nginx
+
+    - name: cp php.ini
+      copy:
+        src: ./php/php.ini.j2
+        dest: /etc/php.ini
+        backup: yes
+      notify: restart php-fpm
+    
+    - name: cp www.conf
+      copy:
+        src: ./php/www.conf.j2
+        dest: /etc/php-fpm.d/www.conf
+        backup: yes
+      notify: restart php-fpm
+
+    - name: cp config.inc.php
+      copy:
+        src: ./webservers/config.inc.php.j2
+        dest: /code/phpMyAdmin-5.0.2-all-languages/config.inc.php
+        backup: yes
+        owner: www
+        group: www
+      notify: restart nginx
+
+  handlers:
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
+        enabled: yes
+    - name: restart php-fpm
+      systemd:
+        name: php-fpm
+        state: restarted
+        enabled: yes
+
+
+
+
+
+
+
+         

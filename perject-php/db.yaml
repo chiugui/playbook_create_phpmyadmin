@@ -1,0 +1,28 @@
+- hosts: db
+  tasks:
+    - name: install mariadb-/server
+      yum:
+        name: "{{ packs }}"
+        state: present
+      vars:
+        packs:
+          - mariadb
+          - mariadb-server
+          - MySQL-python
+    - name: enabled and restarted server
+      systemd:
+        name: mariadb
+        state: restarted
+        enabled: yes
+    - name: create database php
+      mysql_db:
+        name: php
+        state: present
+    - name: create db-user 
+      mysql_user:
+        name: phpmyadmin
+        password: 123456
+        priv: '*.*:ALL'
+        host: '172.16.1.%'
+        state: present
+         
