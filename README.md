@@ -6,7 +6,7 @@ https://docs.ansible.com/ansible/latest/modules/mysql_user_module.html
 
 https://docs.ansible.com/ansible/latest/modules/mysql_db_module.html
 
-### 1环境搭建
+### 1.环境搭建
 
 ```
 [root@m01 ~]# ssh-keygen -t rsa -C ansible-use
@@ -57,7 +57,7 @@ inventory  = /perject-php/hosts
 
 
 
-### 2数据库剧本编写
+### 2.数据库剧本编写
 
 ```
 - hosts: db
@@ -91,7 +91,7 @@ inventory  = /perject-php/hosts
 
 
 
-### 3redis缓存剧本编写
+### 3.redis缓存剧本编写
 
 ```
 - hosts: redis
@@ -124,7 +124,7 @@ handlers:
 
 
 
-### 4web服务剧本编写
+### 4.web服务剧本编写
 
 ```
 - hosts: Webservers
@@ -228,7 +228,7 @@ handlers:
 
 
 
-### 5 lbs负载均衡剧本编写
+### 5.lbs负载均衡剧本编写
 
 ```
 - hosts: lbs
